@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Budgetify - Edit Transaction</title>
+{% endblock %}
+
+{% block body %}
+<section class="card animate-fade-in">
+    <div class="edit-header mb-3">
+        <h1>Edit Transaction</h1>
+        <p style="color: var(--secondary-text);">Modify your transaction details below</p>
+    </div>
+    
+    <form action="/edit/{{task.log_id}}" method="POST" class="form">
+        {{ csrf_token() }}
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cash_input">Amount (₹)</label>
+                <input type="number" name="cash" id="cash_input" value="{{task.cash}}" 
+                       placeholder="Enter amount" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cash_type">Transaction Type</label>
+                <select name="cash_type" id="cash_type" required>
+                    <option value="credit" {% if task.cash_type == "credit" %}selected{% endif %}>
+                        Income (+)
+                    </option>
+                    <option value="debit" {% if task.cash_type == "debit" %}selected{% endif %}>
+                        Expense (-)
+                    </option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <input type="text" name="desc" id="desc" value="{{task.desc}}" 
+                   placeholder="Enter description">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                Update Transaction
+            </button>
+            <a href="/" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>
+
+<style>
+/* Edit page specific styles */
+.edit-header {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--borders);
+    
+    h1 {
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--borders);
+    
+    @media (max-width: 640px) {
+        flex-direction: column-reverse;
+        
+        .btn {
+            width: 100%;
+        }
+    }
+}
+
+/* Enhanced form styling for edit page */
+.form {
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(74, 108, 253, 0.1);
+        transform: translateY(-1px);
+    }
+    
+    select {
+        option {
+            padding: 0.5rem;
+        }
+    }
+}
+
+/* Validation styles */
+.form-group {
+    input:invalid {
+        border-color: var(--error);
+        
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+    }
+    
+    input:valid {
+        border-color: var(--success);
+    }
+}
+</style>
+{% endblock %}

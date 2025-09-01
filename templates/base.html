@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgetify</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    {% block head %} {% endblock %}
+</head>
+<body>
+    <header>
+        <h1 id="name">Budgetify</h1>        
+        <div class="flex items-center">
+            <nav id="nav_bar"> 
+                <a href="/" class="nav-link">Home</a>
+                <a href="/stats" class="nav-link">Stats</a>
+            </nav>
+            
+            <!-- Theme Toggle Switch -->
+            <label class="theme-toggle" for="theme-switch" aria-label="Toggle dark mode">
+                <input type="checkbox" id="theme-switch">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </header>
+    
+    <main>
+        {% block body %} {% endblock %}
+    </main>
+
+    <script>
+        // Theme switching functionality
+        const themeToggle = document.getElementById('theme-switch');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        themeToggle.checked = savedTheme === 'dark';
+        
+        // Toggle theme
+        themeToggle.addEventListener('change', function() {
+            const newTheme = this.checked ? 'dark' : 'light';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        // Set active nav link
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

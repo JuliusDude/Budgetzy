@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Budgetify - Statistics</title>
+{% endblock %}
+
+{% block body %}
+<section class="card stats-table animate-fade-in">
+    <h2>Financial Overview</h2>
+    <p class="mb-3" style="color: var(--secondary-text);">Complete summary of your financial activity</p>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="stat-label">
+                            <strong>Current Balance</strong>
+                            <small style="display: block; color: var(--secondary-text); font-weight: normal;">
+                                Your available funds
+                            </small>
+                        </div>
+                    </td>
+                    <td class="balance-amount"><br>₹{{balance}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stat-label">
+                            <strong>Total Income</strong>
+                            <small style="display: block; color: var(--secondary-text); font-weight: normal;">
+                                All credit transactions
+                            </small>
+                        </div>
+                    </td>
+                    <td class="credit-amount"><br>+₹{{credit}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="stat-label">
+                            <strong>Total Expenses</strong>
+                            <small style="display: block; color: var(--secondary-text); font-weight: normal;">
+                                All debit transactions
+                            </small>
+                        </div>
+                    </td>
+                    <td class="debit-amount"><br>-₹{{debit}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Quick Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card success animate-fade-in">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+            <h3>₹{{credit}}</h3>
+            <p>Total Income</p>
+        </div>
+    </div>
+    
+    <div class="stat-card error animate-fade-in">
+        <div class="stat-icon">💸</div>
+        <div class="stat-content">
+            <h3>₹{{debit}}</h3>
+            <p>Total Expenses</p>
+        </div>
+    </div>
+    
+    <div class="stat-card primary animate-fade-in">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+            <h3>₹{{totalTransaction}}</h3>
+            <p>Transactions</p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Stats page specific styles */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    @include card-base;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    transition: all var(--transition-normal);
+    
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .stat-icon {
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: var(--radius-lg);
+        background-color: rgba(74, 108, 253, 0.1);
+    }
+    
+    .stat-content {
+        flex: 1;
+        
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 0.25rem 0;
+        }
+        
+        p {
+            margin: 0;
+            color: var(--secondary-text);
+            font-size: 0.875rem;
+        }
+    }
+    
+    &.success {
+        border-left: 4px solid var(--success);
+        
+        .stat-icon {
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+        
+        h3 {
+            color: var(--success);
+        }
+    }
+    
+    &.error {
+        border-left: 4px solid var(--error);
+        
+        .stat-icon {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        
+        h3 {
+            color: var(--error);
+        }
+    }
+    
+    &.primary {
+        border-left: 4px solid var(--primary);
+        
+        .stat-icon {
+            background-color: rgba(74, 108, 253, 0.1);
+        }
+        
+        h3 {
+            color: var(--primary);
+        }
+    }
+}
+
+.balance-amount {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+}
+
+.credit-amount {
+    color: var(--success) !important;
+    font-weight: 600 !important;
+}
+
+.debit-amount {
+    color: var(--error) !important;
+    font-weight: 600 !important;
+}
+
+.transaction-count {
+    color: var(--primary) !important;
+    font-weight: 600 !important;
+}
+
+.stat-label {
+    small {
+        margin-top: 0.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+        
+        .stat-content h3 {
+            font-size: 1.25rem;
+        }
+    }
+}
+</style>
+{% endblock %}

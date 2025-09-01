@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+    <title>Budgetify - Dashboard</title> 
+{% endblock %}
+
+{% block body %}
+<!-- Balance Display -->
+<section class="balance-display animate-fade-in">
+    <h3>Current Balance: ₹{{balance}}</h3>
+</section>
+
+<!-- Entries Section -->
+<section class="card animate-fade-in">
+    <h2>Recent Transactions</h2>
+    
+    {% if tasks | length < 1 %}
+        <div class="empty-state">
+            <h3>No transactions yet</h3>
+            <p>Start by adding your first income or expense below</p>
+        </div>
+    {% else %}
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Log ID</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr class="animate-fade-in">
+                            <td>{{task.log_id}}</td>
+                            {% if task.cash_type == "credit" %}
+                                <td class="credit">{{task.cash}}</td>
+                            {% else %}
+                                <td class="debit">{{task.cash}}</td>
+                            {% endif %}
+                            <td>
+                                <span class="transaction-type {{ task.cash_type }}">
+                                    {{ task.cash_type.title() }}
+                                </span>
+                            </td>
+                            <td>{{task.desc}}</td>
+                            <td>{{task.date_created.strftime("%d-%m-%Y")}}</td>
+                            <td class="action-buttons">
+                                <a href="/edit/{{task.log_id}}" class="btn btn-secondary btn-sm">Edit</a>
+                                <a href="/delete/{{task.log_id}}" class="btn btn-danger btn-sm" 
+                                   onclick="return confirm('Are you sure you want to delete this transaction?')">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+
+<!-- Add New Entry Section -->
+<section class="card animate-fade-in">
+    <h2>Add New Transaction</h2>
+    
+    <form action="/" method="POST" class="form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cash_input">Amount (₹)</label>
+                <input type="number" name="cash" id="cash_input" placeholder="Enter amount" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cash_type">Transaction Type</label>
+                <select name="cash_type" id="cash_type" required>
+                    <option value="">Select type</option>
+                    <option value="credit">Income (+)</option>
+                    <option value="debit">Expense (-)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <input type="text" name="desc" id="desc" placeholder="Enter description (optional)">
+        </div>
+        
+        <button type="submit" id="btn_add" class="btn btn-primary">
+            Add Transaction
+        </button>
+    </form>
+</section>
+
+<style>
+/* Additional styles for index page */
+.transaction-type {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    &.credit {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+    }
+    
+    &.debit {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--error);
+    }
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+}
+
+.action-buttons {
+    gap: 0.5rem !important;
+    
+    @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: stretch;
+        
+        .btn {
+            width: 100%;
+        }
+    }
+}
+</style>
+{% endblock %}
